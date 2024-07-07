@@ -1,0 +1,10 @@
+<form class="max-w-[300px] p-4" action="#" [formGroup]="form" (ngSubmit)="submit()">
+  <input  class="w-full mb-2 border rounded py-2 px-4" type="text" formControlName="name" placeholder="name">
+  <input  class="w-full mb-2 border rounded py-2 px-4" type="text" formControlName="username" placeholder="username">
+  <input  class="w-full mb-2 border rounded py-2 px-4" type="text" formControlName="phone" placeholder="phone">
+  <input  class="w-full mb-2 border rounded py-2 px-4" type="email" formControlName="email" placeholder="email">
+  <div class="w-full flex gap-[5px]">
+    <button class="w-[145px] border rounded py-2 px-4" type="button" (click)="onNoClick()">Cancel</button>
+    <button class="w-[145px] border rounded py-2 px-4" type="submit">{{isEdit ? 'Save' : 'Create'}}</button>
+  </div>
+</form>

@@ -1,0 +1,15 @@
+<button
+  mat-button
+  (click)="openDialog()"
+>Add user</button>
+
+<div class="flex flex-wrap gap-2 pt-2">
+  <app-user-card
+    class="basis-[49.4%] cursor-pointer"
+    *ngFor="let user of users$ | async"
+    [user]="user"
+    (deleteUserEvent)="onDeleteUser($event)"
+    (editUserEvent)="onEditUser($event)"
+    (click)="openDialog(user)"
+  ></app-user-card>
+</div>

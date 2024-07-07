@@ -1,0 +1,9 @@
+<div
+  (click)="onEditeUser()"
+  class="cursor-pointer border py-2 px-4 flex flex-col rounded">
+  <p>Name: {{user.name}}</p>
+  <p>Username: {{user.username}}</p>
+  <p>Phone: {{user.phone}}</p>
+  <p>Email: {{user.email}}</p>
+  <button class="border px-4 py-2  rounded" (click)="onDeleteUser()">Delete</button>
+</div>
