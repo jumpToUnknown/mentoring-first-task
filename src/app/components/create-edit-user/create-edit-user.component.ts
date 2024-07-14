@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -11,7 +11,7 @@ import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
-import {IUser} from "../../models/user";
+import {Address, Company, IUser} from "../../models/user";
 import { UsersService } from '../../services/users.service';
 
 @Component({
@@ -31,19 +31,17 @@ import { UsersService } from '../../services/users.service';
   standalone: true
 })
 export class CreateEditUserComponent implements OnInit {
-  result: IUser;
   constructor(
-    private usersService: UsersService,
+    private usersService: UsersService = inject(UsersService),
     private dialogRef: MatDialogRef<CreateEditUserComponent>,
     @Inject(MAT_DIALOG_DATA) private data: IUser
   ) {
     this.form.patchValue(data);
   }
 
-  isEdit = this.data ? true : false;
+  public readonly isEdit = !!this.data;
 
   ngOnInit(): void {
-    console.log(this.data)
   }
 
   form = new FormGroup({
@@ -57,14 +55,17 @@ export class CreateEditUserComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  submit() {
+  submit(): void {
     const user = {
       id: this.data?.id || this.usersService.getMaxUserId() + 1 as number,
       name: this.form.value.name as string,
       username: this.form.value.username as string,
       phone: this.form.value.phone as string,
       email: this.form.value.email as string,
+      website: this.data?.website || '' as string,
+      address: JSON.parse(JSON.stringify(this.data?.address) || '{}') as Address,
+      company: JSON.parse(JSON.stringify(this.data?.company) || '{}') as Company,
     }
-   this.dialogRef.close(this.result = user);
+   this.dialogRef.close(user);
   }
 }

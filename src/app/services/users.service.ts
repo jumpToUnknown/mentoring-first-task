@@ -13,44 +13,31 @@ export class UsersService {
   public readonly users$ = this.usersSubject$.asObservable();
 
   constructor(private usersApiService: UsersApiService) {
-    this.loadUsers();
+    this.storage.getUsers();
   }
 
-  private getUsersFromLocalStorage(): IUser[] | null {
-    const raw = this.storage.getItem();
-    return raw ? JSON.parse(raw) : null;
-  }
-
-  private saveUsersToLocalStorage(users: IUser[]): void {
-    this.storage.setItem(JSON.stringify(users));
-  }
-
-  private fetchUsersFromApi(): void {
-    this.usersApiService.getUsers().subscribe((data: IUser[]) => {
-      this.usersSubject$.next(data);
-      this.saveUsersToLocalStorage(data);
-    });
-  }
-
-  loadUsers(): void {
-    const users = this.getUsersFromLocalStorage();
-    if (users && users.length > 0) {
-      this.usersSubject$.next(users);
+  public loadUsers() {
+    const localUsers = this.storage.getUsers();
+    if (localUsers.length > 0) {
+      this.usersSubject$.next(localUsers);
     } else {
-      this.fetchUsersFromApi();
+      this.usersApiService.getUsers().subscribe((data: IUser[]) => {
+        this.usersSubject$.next(data);
+        this.storage.saveUsers(data);
+      });
     }
   }
 
   deleteUser(id: number): void {
     const updatedUsers = this.usersSubject$.value.filter(user => user.id !== id);
     this.usersSubject$.next(updatedUsers);
-    this.saveUsersToLocalStorage(updatedUsers);
+    this.storage.saveUsers(updatedUsers);
   }
 
   createUser(newUser: IUser): void {
     const updatedUsers = [...this.usersSubject$.value, newUser];
     this.usersSubject$.next(updatedUsers);
-    this.saveUsersToLocalStorage(updatedUsers);
+    this.storage.saveUsers(updatedUsers);
   }
 
   editUser(updatedUser: IUser): void {
@@ -58,11 +45,11 @@ export class UsersService {
       user.id === updatedUser.id ? updatedUser : user
     );
     this.usersSubject$.next(updatedUsers);
-    this.saveUsersToLocalStorage(updatedUsers);
+    this.storage.saveUsers(updatedUsers);
   }
 
   getMaxUserId(): number {
-    const users = this.getUsersFromLocalStorage();
+    const users = this.storage.getUsers();
     if (users && users.length > 0) {
       return Math.max(...users.map(user => user.id));
     }

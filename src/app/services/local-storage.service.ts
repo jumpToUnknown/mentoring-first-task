@@ -1,20 +1,17 @@
 import { Injectable } from '@angular/core';
+import { IUser } from  '../models/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageService {
-  getItem(): string | null {
-    return localStorage.getItem('jwtToken') || null;
+  public readonly key = 'users';
+  public getUsers(): IUser[] {
+    const storedUsers = localStorage.getItem('users');
+    return storedUsers ? JSON.parse(storedUsers) : [];
   }
 
-  setItem(data: string): string {
-    localStorage.setItem('jwtToken', data);
-    return data;
-  }
-
-  removeItem(): boolean {
-    localStorage.removeItem('jwtToken');
-    return true;
+  public saveUsers(users: IUser[]) {
+    localStorage.setItem(this.key, JSON.stringify(users));
   }
 }

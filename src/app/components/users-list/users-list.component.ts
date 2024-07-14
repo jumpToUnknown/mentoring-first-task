@@ -1,11 +1,11 @@
-import {Component, OnInit} from "@angular/core";
-import {UsersService} from "../../services/users.service";
-import {UserCardComponent} from "../user-card/user-card.component";
-import {AsyncPipe, NgForOf} from "@angular/common";
-import {MatButton} from "@angular/material/button";
-import {MatDialog} from "@angular/material/dialog";
-import {CreateEditUserComponent} from "../create-edit-user/create-edit-user.component";
-import {IUser} from "../../models/user";
+import { Component, OnInit } from "@angular/core";
+import { UsersService } from "../../services/users.service";
+import { UserCardComponent } from "../user-card/user-card.component";
+import { AsyncPipe, NgForOf } from "@angular/common";
+import { MatButton } from "@angular/material/button";
+import { MatDialog } from "@angular/material/dialog";
+import { CreateEditUserComponent } from "../create-edit-user/create-edit-user.component";
+import { IUser } from "../../models/user";
 
 @Component({
   selector: 'app-users-list',
@@ -23,7 +23,7 @@ export class UsersListComponent implements OnInit {
 
   constructor(
     private usersService: UsersService,
-    public dialog: MatDialog,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -46,14 +46,11 @@ export class UsersListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       result => {
-        if (result) {
-          if (user) {
-            this.usersService.editUser(result);
-          } else {
-            this.usersService.createUser(result);
-          }
+        if (user) {
+          this.usersService.editUser(result)
+        } else {
+          this.usersService.createUser(result);
         }
-      }
-    )
+    });
   }
 }
